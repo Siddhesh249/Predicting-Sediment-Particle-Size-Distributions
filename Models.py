@@ -106,10 +106,10 @@ print("\n--- Training SVR Models ---")
 
 # As per the paper, SVR is trained only on the top-4 important features
 top4 = ['S', 'ub', 'np', 'T']
-Xtr_d50_top4 = X_train[top4]
-Xte_d50_top4 = X_test[top4]
-Xtr_s2_top4  = X_train2[top4]
-Xte_s2_top4  = X_test2[top4]
+Xtr_d50_top4 = pd.DataFrame(X_train, columns=features)[top4]
+Xte_d50_top4 = pd.DataFrame(X_test, columns=features)[top4]
+Xtr_s2_top4  = pd.DataFrame(X_train2, columns=features)[top4]
+Xte_s2_top4  = pd.DataFrame(X_test2, columns=features)[top4]
 
 svr_pipe = Pipeline([
     ('scaler', StandardScaler()),
