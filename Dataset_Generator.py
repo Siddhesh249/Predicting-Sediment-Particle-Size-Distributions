@@ -1,4 +1,5 @@
 import logging
+
 import numpy as np
 import pandas as pd
 
@@ -9,7 +10,8 @@ def generate_synthetic_sediment_data(n_samples=1648, seed=42, add_missing=True, 
     """
     Generates a synthetic dataset for predicting sediment particle size distributions.
     """
-    logging.info(f"Generating synthetic dataset with {n_samples} samples (seed={seed}).")
+    logger = logging.getLogger(__name__)
+    logger.info(f"Generating synthetic dataset with {n_samples} samples (seed={seed}).")
     np.random.seed(seed)
 
     # Time index (hourly)
@@ -17,8 +19,8 @@ def generate_synthetic_sediment_data(n_samples=1648, seed=42, add_missing=True, 
 
     # Basic feature generation
     S = np.random.uniform(20, 35, n_samples)
-    np_index = np.random.normal(loc=1.38, scale=0.03, size=n_samples) 
-    
+    np_index = np.random.normal(loc=1.38, scale=0.03, size=n_samples)
+
     # Temperature with seasonal component
     hours = np.arange(n_samples)
     T = 16 + 6 * np.sin(2 * np.pi * hours / (24 * 15)) + np.random.normal(0, 1.2, n_samples)
@@ -66,7 +68,7 @@ def generate_synthetic_sediment_data(n_samples=1648, seed=42, add_missing=True, 
 
     # Injecting Missing values
     if add_missing:
-        logging.info("Injecting missing values (2% of feature data).")
+        logger.info("Injecting missing values (2% of feature data).")
         feat_cols = ['S', 'ub', 'np', 'T', 'a676_a650', 'a450_a676', 'chl_a', 'u']
         n_cells = df[feat_cols].size
         n_missing = int(0.02 * n_cells)
@@ -78,7 +80,7 @@ def generate_synthetic_sediment_data(n_samples=1648, seed=42, add_missing=True, 
 
     # Injecting Outliers
     if add_outliers:
-        logging.info("Injecting outliers into target variables.")
+        logger.info("Injecting outliers into target variables.")
         n_out = max(1, int(0.005 * n_samples))
         out_idx = np.random.choice(n_samples, n_out, replace=False)
         df.loc[out_idx, 'd50'] *= np.random.uniform(1.5, 3.0, size=n_out)
@@ -89,7 +91,7 @@ def generate_synthetic_sediment_data(n_samples=1648, seed=42, add_missing=True, 
     df['a450_a676'] = df['a450_a676'].clip(0.3, 1.6)
     df['chl_a'] = df['chl_a'].clip(0.01, 50)
 
-    logging.info("Synthetic dataset generation completed successfully.")
+    logger.info("Synthetic dataset generation completed successfully.")
     return df
 
 
@@ -97,4 +99,5 @@ if __name__ == "__main__":
     output_file = "Dataset.csv"
     data = generate_synthetic_sediment_data()
     data.to_csv(output_file, index=False)
-    logging.info(f"Dataset successfully saved to {output_file} with shape {data.shape}")
+    logger = logging.getLogger(__name__)
+    logger.info(f"Dataset successfully saved to {output_file} with shape {data.shape}")
