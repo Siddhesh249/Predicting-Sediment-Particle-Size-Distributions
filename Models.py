@@ -108,10 +108,10 @@ print("\n--- Training SVR Models ---")
 
 # As per the paper, SVR is trained only on the top-4 important features
 top4 = ['S', 'ub', 'np', 'T']
-Xtr_d50_top4 = pd.DataFrame(X_train, columns=features)[top4]
-Xte_d50_top4 = pd.DataFrame(X_test, columns=features)[top4]
-Xtr_s2_top4  = pd.DataFrame(X_train2, columns=features)[top4]
-Xte_s2_top4  = pd.DataFrame(X_test2, columns=features)[top4]
+Xtr_d50_top4 = X_train[top4]
+Xte_d50_top4 = X_test[top4]
+Xtr_s2_top4  = X_train2[top4]
+Xte_s2_top4  = X_test2[top4]
 
 svr_pipe = Pipeline([
     ('scaler', StandardScaler()),
@@ -160,16 +160,17 @@ r2_d50_vsC, r2_sigma2_vsC = [], []
 r2_d50_vseps, r2_sigma2_vseps = [], []
 
 # Scale the top-4 features manually for this cross-validation sweep
-scaler_top4 = StandardScaler()
-Xtr_d50_scaled = scaler_top4.fit_transform(Xtr_d50_top4)
-Xtr_s2_scaled = scaler_top4.fit_transform(Xtr_s2_top4)
+scaler_d50 = StandardScaler()
+scaler_s2  = StandardScaler()
+Xtr_d50_scaled = scaler_d50.fit_transform(Xtr_d50_top4)
+Xtr_s2_scaled  = scaler_s2.fit_transform(Xtr_s2_top4)
 
 for C in C_values:
     svr_tmp_d50 = SVR(kernel='rbf', C=C, epsilon=eps_fixed, gamma='scale')
     svr_tmp_s2 = SVR(kernel='rbf', C=C, epsilon=eps_fixed, gamma='scale')
 
-    r2_d50 = cross_val_score(svr_tmp_d50, Xtr_d50_scaled, y_train_d50, cv=5, scoring='r2').mean()
-    r2_sigma2 = cross_val_score(svr_tmp_s2, Xtr_s2_scaled, y_train_sigma2, cv=5, scoring='r2').mean()
+    r2_d50 = cross_val_score(svr_tmp_d50, Xtr_d50_scaled, y_train_d50, cv=cv, scoring='r2').mean()
+    r2_sigma2 = cross_val_score(svr_tmp_s2, Xtr_s2_scaled, y_train_sigma2, cv=cv, scoring='r2').mean()
 
     r2_d50_vsC.append(r2_d50)
     r2_sigma2_vsC.append(r2_sigma2)
@@ -178,8 +179,8 @@ for eps in eps_values:
     svr_tmp_d50 = SVR(kernel='rbf', C=C_fixed, epsilon=eps, gamma='scale')
     svr_tmp_s2 = SVR(kernel='rbf', C=C_fixed, epsilon=eps, gamma='scale')
 
-    r2_d50 = cross_val_score(svr_tmp_d50, Xtr_d50_scaled, y_train_d50, cv=5, scoring='r2').mean()
-    r2_sigma2 = cross_val_score(svr_tmp_s2, Xtr_s2_scaled, y_train_sigma2, cv=5, scoring='r2').mean()
+    r2_d50 = cross_val_score(svr_tmp_d50, Xtr_d50_scaled, y_train_d50, cv=cv, scoring='r2').mean()
+    r2_sigma2 = cross_val_score(svr_tmp_s2, Xtr_s2_scaled, y_train_sigma2, cv=cv, scoring='r2').mean()
 
     r2_d50_vseps.append(r2_d50)
     r2_sigma2_vseps.append(r2_sigma2)

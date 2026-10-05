@@ -23,7 +23,7 @@ cd Predicting-Sediment-Particle-Size-Distributions
 ```
 
 ### 2. Install Dependencies
-Confirm your software stack using the provided `requirements.txt` file:
+Confirm required libraries are installed using the provided `requirements.txt` file:
 ```bash
 pip install -r requirements.txt
 ```
