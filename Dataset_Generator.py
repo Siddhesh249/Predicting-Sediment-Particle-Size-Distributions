@@ -3,7 +3,6 @@ import logging
 import numpy as np
 import pandas as pd
 
-# Configure professional logging
 logging.basicConfig(level=logging.INFO, format='%(levelname)s: %(message)s')
 
 def generate_synthetic_sediment_data(n_samples=1648, seed=42, add_missing=True, add_outliers=True):
