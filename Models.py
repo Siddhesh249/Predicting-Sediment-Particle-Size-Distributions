@@ -1,4 +1,5 @@
 import os
+import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -16,6 +17,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
+warnings.filterwarnings("ignore", message="Some inputs do not have OOB scores.")
 sns.set_theme(style="whitegrid", context="paper")
 
 # Ensure Results directory exists
