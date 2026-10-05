@@ -1,4 +1,4 @@
-# Predicting-Sediment-Particle-Size-Distributions
+# Predicting Sediment Particle Size Distributions
 
 **Team Members:**  
 - Siddhesh Dattatray Koditkar (PES2UG24CS502)
